@@ -6,12 +6,12 @@ public class Hacker : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        ShowMainMenu();
+        ShowMainMenu("Hello Michael");
     }
 
-    void ShowMainMenu() {
+    void ShowMainMenu(string greeting) {
 
-        string greeting = "Hello Michael";
+        //string greeting = "Hello Michael";
 
         Terminal.ClearScreen();
         Terminal.WriteLine(greeting);
@@ -22,12 +22,17 @@ public class Hacker : MonoBehaviour {
         Terminal.WriteLine("Press 3 for NASA");
         Terminal.WriteLine("");
         Terminal.WriteLine("Enter your selection: ");
+
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    void OnUserInput(string input)
+    {
+        print(input == "1");
+    }
+
+
+
+
 
 
 }
