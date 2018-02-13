@@ -1,40 +1,22 @@
-﻿//using System;
-//using System.Collections;
-//using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
 
 public class Hacker : MonoBehaviour
 {
-
     //Game configuration data
-    string[] level1Passwords = { "books", "aisle", "self", "password", "font", "borrow"};
+    const string menuHint = "You may type menu at any time.";
+    string[] level1Passwords = { "books", "aisle", "shelf", "password", "font", "borrow"};
     string[] level2Passwords = { "prisoner", "handcuffs", "holster", "uniform", "arrest" };
     string[] level3Passwords = { "starfield", "telescope", "environment", "exploration", "astronauts" };
-
 
     //Game State
     int level;
     enum Screen {MainMenu, Password, Win};
     Screen currentScreen;
     string password;
-    //Random random = new Random();
-
-    //Probably get rid of these
-    //string libraryPassword = "book";
-    //string policeStationPassword = "handcuffs";
-    //string nasaPassword = "hubbletelescope";
-
-    //List<string> pwdList = new List<string>();
-
-    //string guessedPassword;
 
     // Use this for initialization
     void Start ()
     {
-        //pwdList.Add(libraryPassword);
-        //pwdList.Add(policeStationPassword);
-        //pwdList.Add(nasaPassword);
         ShowMainMenu();
     }
 
@@ -57,6 +39,11 @@ public class Hacker : MonoBehaviour
         {
             ShowMainMenu();
         }
+        else if (input == "quit" || input == "close" || input == "exit")
+        {
+            Terminal.WriteLine("If in the web close the tab.");
+            Application.Quit();
+        }
 
         else if (currentScreen == Screen.MainMenu)
         {
@@ -65,7 +52,6 @@ public class Hacker : MonoBehaviour
 
         else if (currentScreen == Screen.Password)
         {
-            //guessedPassword = input;
             CheckPassword(input);
         }
 
@@ -79,22 +65,6 @@ public class Hacker : MonoBehaviour
             level = int.Parse(input);
             StartGame();
         }
-
-        //if (input == "1")
-        //{
-        //    password = level1Passwords[random.Next(0, level1Passwords.Length)]; // todo make random later
-        //    StartGame();
-        //}
-        //else if (input == "2")
-        //{
-        //    password = level2Passwords[random.Next(0, level2Passwords.Length)]; // todo make random later
-        //    StartGame();
-        //}
-        //else if (input == "3")
-        //{
-        //    password = level3Passwords[random.Next(0, level3Passwords.Length)]; // todo make random later
-        //    StartGame();
-        //}
         else if (input == "007")
         {
             Terminal.WriteLine("Please choose a level, Mr. Bond");
@@ -110,6 +80,7 @@ public class Hacker : MonoBehaviour
         else
         {
             Terminal.WriteLine("I don't know what that is. Please try again.");
+            Terminal.WriteLine(menuHint);
         }
     }
 
@@ -117,39 +88,39 @@ public class Hacker : MonoBehaviour
     {
         currentScreen = Screen.Password;
         Terminal.ClearScreen();
-        // Terminal.WriteLine("You chose level " + level);
+        SetRandomPassword();
+        Terminal.WriteLine("Enter your password, hint: " + password.Anagram());
+        Terminal.WriteLine(menuHint);
+    }
 
+    void SetRandomPassword()
+    {
         switch (level)
         {
             case 1:
-                //password = level1Passwords[random.Next(0, level1Passwords.Length)]; // todo make random later
                 password = level1Passwords[Random.Range(0, level1Passwords.Length)];
                 break;
             case 2:
-                //password = level2Passwords[random.Next(0, level2Passwords.Length)]; // todo make random later
                 password = level2Passwords[Random.Range(0, level2Passwords.Length)];
                 break;
             case 3:
-                //password = level3Passwords[random.Next(0, level3Passwords.Length)]; // todo make random later
                 password = level3Passwords[Random.Range(0, level3Passwords.Length)];
                 break;
             default:
                 Debug.LogError("Invalid level number");
                 break;
         }
-        Terminal.WriteLine("Please enter your password:");
     }
 
     void CheckPassword(string input)
     {
-        //if (input == pwdList[level - 1])
         if (input == password)
         {
             DisplayWinScreen();
         }
         else
         {
-            Terminal.WriteLine("That is incorrect, please try again.");
+            StartGame();
         }
     }
 
@@ -157,10 +128,11 @@ public class Hacker : MonoBehaviour
     {
         currentScreen = Screen.Win;
         Terminal.ClearScreen();
-        ShowLevelReqard();
+        ShowLevelReward();
+        Terminal.WriteLine(menuHint);
     }
 
-    void ShowLevelReqard()
+    void ShowLevelReward()
     {
         switch(level)
         {
@@ -175,10 +147,27 @@ public class Hacker : MonoBehaviour
 "               );
                 break;
             case 2:
-                Terminal.WriteLine("Congratulations, you got it Right!");
+                Terminal.WriteLine("You got the prison key!");
+                Terminal.WriteLine("Play again for a greater challenge!");
+                Terminal.WriteLine(@"
+ __
+/0 \_______
+\__/-=' = '
+"
+                );
+
                 break;
             case 3:
-                Terminal.WriteLine("Congratulations, you got it Right!");
+                Terminal.WriteLine("Blast Off!");
+                Terminal.WriteLine(@"
+    __  ___________________
+~  |  \/                   \
+ ~ |           NASA         \
+ ~ |                        /
+~  |__/\___________________/
+"
+);
+                Terminal.WriteLine("Welcome to NASA's internal system!");
                 break;
             default:
                 break;
