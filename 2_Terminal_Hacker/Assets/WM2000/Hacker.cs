@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿//using System;
+//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -9,7 +9,8 @@ public class Hacker : MonoBehaviour
 
     //Game configuration data
     string[] level1Passwords = { "books", "aisle", "self", "password", "font", "borrow"};
-    string[] level2Passwords = { "handcuffs", "jailcell", "blotter", "taser", "squadcar", "criminal" };
+    string[] level2Passwords = { "prisoner", "handcuffs", "holster", "uniform", "arrest" };
+    string[] level3Passwords = { "starfield", "telescope", "environment", "exploration", "astronauts" };
 
 
     //Game State
@@ -17,7 +18,7 @@ public class Hacker : MonoBehaviour
     enum Screen {MainMenu, Password, Win};
     Screen currentScreen;
     string password;
-    System.Random random = new System.Random();
+    //Random random = new Random();
 
     //Probably get rid of these
     //string libraryPassword = "book";
@@ -72,23 +73,28 @@ public class Hacker : MonoBehaviour
 
     private void RunMainMenu(string input)
     {
-        if (input == "1")
+        bool isValidLevelNumber = (input == "1" || input == "2" || input == "3");
+        if (isValidLevelNumber)
         {
-            level = 1;
-            password = level1Passwords[random.Next(0, level1Passwords.Length)]; // todo make random later
+            level = int.Parse(input);
             StartGame();
         }
-        else if (input == "2")
-        {
-            level = 2;
-            password = level2Passwords[random.Next(0, level2Passwords.Length)]; // todo make random later
-            StartGame();
-        }
-        else if (input == "3")
-        {
-            level = 3;
-            StartGame();
-        }
+
+        //if (input == "1")
+        //{
+        //    password = level1Passwords[random.Next(0, level1Passwords.Length)]; // todo make random later
+        //    StartGame();
+        //}
+        //else if (input == "2")
+        //{
+        //    password = level2Passwords[random.Next(0, level2Passwords.Length)]; // todo make random later
+        //    StartGame();
+        //}
+        //else if (input == "3")
+        //{
+        //    password = level3Passwords[random.Next(0, level3Passwords.Length)]; // todo make random later
+        //    StartGame();
+        //}
         else if (input == "007")
         {
             Terminal.WriteLine("Please choose a level, Mr. Bond");
@@ -110,22 +116,73 @@ public class Hacker : MonoBehaviour
     void StartGame()
     {
         currentScreen = Screen.Password;
+        Terminal.ClearScreen();
+        // Terminal.WriteLine("You chose level " + level);
 
-        Terminal.WriteLine("You chose level " + level);
+        switch (level)
+        {
+            case 1:
+                //password = level1Passwords[random.Next(0, level1Passwords.Length)]; // todo make random later
+                password = level1Passwords[Random.Range(0, level1Passwords.Length)];
+                break;
+            case 2:
+                //password = level2Passwords[random.Next(0, level2Passwords.Length)]; // todo make random later
+                password = level2Passwords[Random.Range(0, level2Passwords.Length)];
+                break;
+            case 3:
+                //password = level3Passwords[random.Next(0, level3Passwords.Length)]; // todo make random later
+                password = level3Passwords[Random.Range(0, level3Passwords.Length)];
+                break;
+            default:
+                Debug.LogError("Invalid level number");
+                break;
+        }
         Terminal.WriteLine("Please enter your password:");
-
     }
 
     void CheckPassword(string input)
     {
         //if (input == pwdList[level - 1])
         if (input == password)
-            {
-            Terminal.WriteLine("Congratulations, you got it Right!");
+        {
+            DisplayWinScreen();
         }
         else
         {
             Terminal.WriteLine("That is incorrect, please try again.");
         }
+    }
+
+    void DisplayWinScreen()
+    {
+        currentScreen = Screen.Win;
+        Terminal.ClearScreen();
+        ShowLevelReqard();
+    }
+
+    void ShowLevelReqard()
+    {
+        switch(level)
+        {
+            case 1:
+                Terminal.WriteLine("Have a book...");
+                Terminal.WriteLine(@"
+    _______
+   /      //
+  /      //
+ /_____ //
+(______(/
+"               );
+                break;
+            case 2:
+                Terminal.WriteLine("Congratulations, you got it Right!");
+                break;
+            case 3:
+                Terminal.WriteLine("Congratulations, you got it Right!");
+                break;
+            default:
+                break;
+        }
+        
     }
 }
